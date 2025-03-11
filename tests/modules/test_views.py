@@ -1,8 +1,11 @@
 
 from django.test import TestCase, Client, override_settings
 from django.urls import reverse
+from django.contrib.auth.models import User
+
 from modules.models import Module
 from modules.forms import AddModuleForm, UpdateModuleForm
+
 
 @override_settings(DATABASES={
     'default': {
@@ -14,6 +17,19 @@ from modules.forms import AddModuleForm, UpdateModuleForm
 class ModuleViewTestCase(TestCase):
     def setUp(self):
         self.client = Client()
+        
+        self.superuser = User.objects.create_superuser(
+            username='admin',
+            password='adminpassword',
+            email='admin@example.com'
+        )
+        
+        self.user = User.objects.create_user(
+            username='user',
+            password='userpassword',
+            email='user@example.com'
+        )
+        
         self.module = Module.objects.create(
             name='Test Module',
             version='1.0',
@@ -21,7 +37,37 @@ class ModuleViewTestCase(TestCase):
             repository='https://github.com/herbew/promodules.git',
             description='This is a test module'
         )
+	
+    def test_install_module_superuser(self):
+        self.client.login(username='admin', password='adminpassword')
+        response = self.client.get(reverse('install_module'))
+        self.assertEqual(response.status_code, 200)
 
+    def test_install_module_regular_user(self):
+        self.client.login(username='user', password='userpassword')
+        response = self.client.get(reverse('install_module'))
+        self.assertEqual(response.status_code, 302)  # Forbidden
+    
+    def test_upgrade_module_superuser(self):
+        self.client.login(username='admin', password='adminpassword')
+        response = self.client.get(reverse('upgrade_module', args=[self.module.id]))
+        self.assertEqual(response.status_code, 200)
+
+    def test_upgrade_module_regular_user(self):
+        self.client.login(username='user', password='userpassword')
+        response = self.client.get(reverse('upgrade_module', args=[self.module.id]))
+        self.assertEqual(response.status_code, 302)  # Forbidden
+    
+    def test_uninstall_module_superuser(self):
+        self.client.login(username='admin', password='adminpassword')
+        response = self.client.get(reverse('uninstall_module', args=[self.module.id]))
+        self.assertEqual(response.status_code, 302)
+
+    def test_uninstall_module_regular_user(self):
+        self.client.login(username='user', password='userpassword')
+        response = self.client.get(reverse('uninstall_module', args=[self.module.id]))
+        self.assertEqual(response.status_code, 302)  # Forbidden
+    
     def test_module_list_view(self):
         response = self.client.get(reverse('module_list'))
         self.assertEqual(response.status_code, 200)
@@ -32,10 +78,11 @@ class ModuleViewTestCase(TestCase):
         data = {
             'name': 'New Test Module',
             'version': '2.0',
-            'status': 'active',
+            'status': 'installed',
             'repository': 'https://github.com/herbew/promodules.git',
             'description': 'This is a new test module'
         }
+        self.client.login(username='admin', password='adminpassword')
         response = self.client.post(reverse('install_module'), data)
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('module_list'))
@@ -45,10 +92,12 @@ class ModuleViewTestCase(TestCase):
         data = {
             'name': 'Updated Test Module',
             'version': '1.1',
-            'status': 'active',
+            'status': 'installed',
             'repository': 'https://github.com/herbew/promodules.git',
             'description': 'This is an updated test module'
         }
+        self.client.login(username='admin', password='adminpassword')
+        
         response = self.client.post(reverse('upgrade_module', args=[self.module.id]), data)
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('module_list'))
@@ -56,6 +105,7 @@ class ModuleViewTestCase(TestCase):
         self.assertEqual(self.module.name, 'Updated Test Module')
 
     def test_uninstall_module_view(self):
+        self.client.login(username='admin', password='adminpassword')
         response = self.client.post(reverse('uninstall_module', args=[self.module.id]))
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('module_list'))
@@ -66,6 +116,18 @@ class ModuleViewTestCase(TestCase):
 class ModuleViewsTest1(TestCase):
     def setUp(self):
         self.client = Client()
+        self.superuser = User.objects.create_superuser(
+            username='admin',
+            password='adminpassword',
+            email='admin@example.com'
+        )
+        
+        self.user = User.objects.create_user(
+            username='user',
+            password='userpassword',
+            email='user@example.com'
+        )
+        
         self.module = Module.objects.create(
             name='Test Module',
             version='1.0',
@@ -80,14 +142,17 @@ class ModuleViewsTest1(TestCase):
         self.assertContains(response, 'Test Module')
 
     def test_install_module_view(self):
+        self.client.login( username='admin', password='adminpassword')
         response = self.client.get(reverse('install_module'))
         self.assertEqual(response.status_code, 200)
 
     def test_upgrade_module_view(self):
+        self.client.login(username='admin', password='adminpassword')
         response = self.client.get(reverse('upgrade_module', args=[self.module.id]))
         self.assertEqual(response.status_code, 200)
   
     def test_uninstall_module_view(self):
+        self.client.login(username='admin', password='adminpassword')
         response = self.client.get(reverse('uninstall_module', args=[self.module.id]))
         self.assertEqual(response.status_code, 302)
         
