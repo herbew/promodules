@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module List</title>
+</head>
+<body>
+    <h1>Module List</h1>
+    <a href="{% url 'install_module' %}">Install New Module</a>
+    <ul>
+        {% for module in modules %}
+            <li>
+                {{ module.name }} (v{{ module.version }}) - {{ module.status }}
+                <a href="{% url 'upgrade_module' module.id %}">Upgrade</a>
+                <a href="{% url 'uninstall_module' module.id %}">Uninstall</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
