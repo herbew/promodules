@@ -1,6 +1,13 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from .forms import AddModuleForm, UpdateModuleForm
 from .models import Module
+
+@override_settings(DATABASES={
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': ':memory:',
+    }
+})
 
 class AddModuleFormTestCase(TestCase):
     def test_valid_form(self):

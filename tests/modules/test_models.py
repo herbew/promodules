@@ -1,5 +1,12 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from modules.models import Module
+
+@override_settings(DATABASES={
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': ':memory:',
+    }
+})
 
 class ModuleModelTest(TestCase):
     def test_create_module(self):
