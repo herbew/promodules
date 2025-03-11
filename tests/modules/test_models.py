@@ -19,15 +19,15 @@ class ModuleModelTest(TestCase):
         )
         self.assertEqual(module.name, 'Test Module')
         self.assertEqual(module.version, '1.0')
-        self.assertEqual(module.status, 'active')
+        self.assertEqual(module.status, 'installed')
         self.assertEqual(module.repository, 'https://github.com/herbew/promodules.git')
         self.assertEqual(module.description, 'This is a test module')
         
-  def test_update_module(self):
+    def test_update_module(self):
         module = Module.objects.create(
             name='Test Module',
             version='1.0',
-            status='active',
+            status='installed',
             repository='https://github.com/herbew/promodules.git',
             description='This is a test module'
         )
@@ -39,7 +39,7 @@ class ModuleModelTest(TestCase):
         module = Module.objects.create(
             name='Test Module',
             version='1.0',
-            status='active',
+            status='installed',
             repository='https://github.com/herbew/promodules.git',
             description='This is a test module'
         )

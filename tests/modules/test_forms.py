@@ -1,6 +1,6 @@
 from django.test import TestCase, override_settings
-from .forms import AddModuleForm, UpdateModuleForm
-from .models import Module
+from modules.forms import AddModuleForm, UpdateModuleForm
+from modules.models import Module
 
 @override_settings(DATABASES={
     'default': {
@@ -37,7 +37,7 @@ class UpdateModuleFormTestCase(TestCase):
         self.module = Module.objects.create(
             name='Test Module',
             version='1.0',
-            status='active',
+            status='installed',
             repository='https://github.com/herbew/promodules.git',
             description='This is a test module'
         )

@@ -1,6 +1,6 @@
 from django.test import TestCase, override_settings
 from django.urls import reverse, resolve
-from ..views import module_list, install_module, upgrade_module, uninstall_module
+from modules.views import module_list, install_module, upgrade_module, uninstall_module
 
 @override_settings(DATABASES={
     'default': {
@@ -28,5 +28,5 @@ class ModuleURLTestCase(TestCase):
     def test_uninstall_module_url(self):
         url = reverse('uninstall_module', args=[1])
         self.assertEqual(url, '/module/uninstall/1/')
-		self.assertEqual(resolve(url).func, uninstall_module)
+        self.assertEqual(resolve(url).func, uninstall_module)
         
