@@ -5,7 +5,7 @@ setup(
     version='1.0',
     packages=find_packages(),
     install_requires=[
-        'Django>=3.2',
+        'django>=3.2',
         'django-formtools>=2.2',
     ],
     author='Heribertus Rustyawan',
