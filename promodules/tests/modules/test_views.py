@@ -109,7 +109,8 @@ class ModuleViewTestCase(TestCase):
         response = self.client.post(reverse('modules:uninstall_module', args=[self.module.id]))
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('modules:module_list'))
-        self.assertEqual(Module.objects.count(), 0)
+        self.module.refresh_from_db()
+        self.assertEqual(self.module.status, 'Uninstalled')
         
         
 
