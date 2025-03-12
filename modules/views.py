@@ -44,6 +44,8 @@ def upgrade_module(request, module_id):
         form = UpdateModuleForm(request.POST, instance=module)
         if form.is_valid():
             form.save()
+            module.status = 'installed'
+            module.save()
             return redirect('modules:module_list')
     else:
         form = UpdateModuleForm(instance=module)
