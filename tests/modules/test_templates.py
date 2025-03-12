@@ -21,7 +21,7 @@ class ModuleTemplatesTest(TestCase):
         )
 
     def test_module_list_template(self):
-        response = self.client.get(reverse('module_list'))
+        response = self.client.get(reverse('modules:module_list'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'modules/module_list.html')
         self.assertContains(response, 'Test Module')
@@ -29,21 +29,21 @@ class ModuleTemplatesTest(TestCase):
         self.assertContains(response, 'installed')
 
     def test_install_module_template(self):
-        response = self.client.get(reverse('install_module'))
+        response = self.client.get(reverse('modules:install_module'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'modules/install_module.html')
         self.assertContains(response, '<form method="post">')
         self.assertContains(response, 'Install Module')
 
     def test_upgrade_module_template(self):
-        response = self.client.get(reverse('upgrade_module', args=[self.module.id]))
+        response = self.client.get(reverse('modules:upgrade_module', args=[self.module.id]))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'modules/upgrade_module.html')
         self.assertContains(response, '<form method="post">')
         self.assertContains(response, 'Upgrade Module')
 
     def test_uninstall_module_template(self):
-        response = self.client.get(reverse('uninstall_module', args=[self.module.id]))
+        response = self.client.get(reverse('modules:uninstall_module', args=[self.module.id]))
         self.assertEqual(response.status_code, 302)
         #self.assertTemplateUsed(response, 'modules/module_list.html')
         #self.assertContains(response, 'Are you sure you want to uninstall Test Module?')

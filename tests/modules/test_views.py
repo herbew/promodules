@@ -40,36 +40,36 @@ class ModuleViewTestCase(TestCase):
 	
     def test_install_module_superuser(self):
         self.client.login(username='admin', password='adminpassword')
-        response = self.client.get(reverse('install_module'))
+        response = self.client.get(reverse('modules:install_module'))
         self.assertEqual(response.status_code, 200)
 
     def test_install_module_regular_user(self):
         self.client.login(username='user', password='userpassword')
-        response = self.client.get(reverse('install_module'))
+        response = self.client.get(reverse('modules:install_module'))
         self.assertEqual(response.status_code, 302)  # Forbidden
     
     def test_upgrade_module_superuser(self):
         self.client.login(username='admin', password='adminpassword')
-        response = self.client.get(reverse('upgrade_module', args=[self.module.id]))
+        response = self.client.get(reverse('modules:upgrade_module', args=[self.module.id]))
         self.assertEqual(response.status_code, 200)
 
     def test_upgrade_module_regular_user(self):
         self.client.login(username='user', password='userpassword')
-        response = self.client.get(reverse('upgrade_module', args=[self.module.id]))
+        response = self.client.get(reverse('modules:upgrade_module', args=[self.module.id]))
         self.assertEqual(response.status_code, 302)  # Forbidden
     
     def test_uninstall_module_superuser(self):
         self.client.login(username='admin', password='adminpassword')
-        response = self.client.get(reverse('uninstall_module', args=[self.module.id]))
+        response = self.client.get(reverse('modules:uninstall_module', args=[self.module.id]))
         self.assertEqual(response.status_code, 302)
 
     def test_uninstall_module_regular_user(self):
         self.client.login(username='user', password='userpassword')
-        response = self.client.get(reverse('uninstall_module', args=[self.module.id]))
+        response = self.client.get(reverse('modules:uninstall_module', args=[self.module.id]))
         self.assertEqual(response.status_code, 302)  # Forbidden
     
     def test_module_list_view(self):
-        response = self.client.get(reverse('module_list'))
+        response = self.client.get(reverse('modules:module_list'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'modules/module_list.html')
         self.assertContains(response, 'Test Module')
@@ -85,7 +85,7 @@ class ModuleViewTestCase(TestCase):
         self.client.login(username='admin', password='adminpassword')
         response = self.client.post(reverse('install_module'), data)
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('module_list'))
+        self.assertRedirects(response, reverse('modules:module_list'))
         self.assertEqual(Module.objects.count(), 2)
 
     def test_upgrade_module_view(self):
@@ -100,15 +100,15 @@ class ModuleViewTestCase(TestCase):
         
         response = self.client.post(reverse('upgrade_module', args=[self.module.id]), data)
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('module_list'))
+        self.assertRedirects(response, reverse('modules:module_list'))
         self.module.refresh_from_db()
         self.assertEqual(self.module.name, 'Updated Test Module')
 
     def test_uninstall_module_view(self):
         self.client.login(username='admin', password='adminpassword')
-        response = self.client.post(reverse('uninstall_module', args=[self.module.id]))
+        response = self.client.post(reverse('modules:uninstall_module', args=[self.module.id]))
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('module_list'))
+        self.assertRedirects(response, reverse('modules:module_list'))
         self.assertEqual(Module.objects.count(), 0)
         
         
@@ -137,23 +137,23 @@ class ModuleViewsTest1(TestCase):
         )
 
     def test_module_list_view(self):
-        response = self.client.get(reverse('module_list'))
+        response = self.client.get(reverse('modules:module_list'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Test Module')
 
     def test_install_module_view(self):
         self.client.login( username='admin', password='adminpassword')
-        response = self.client.get(reverse('install_module'))
+        response = self.client.get(reverse('modules:install_module'))
         self.assertEqual(response.status_code, 200)
 
     def test_upgrade_module_view(self):
         self.client.login(username='admin', password='adminpassword')
-        response = self.client.get(reverse('upgrade_module', args=[self.module.id]))
+        response = self.client.get(reverse('modules:upgrade_module', args=[self.module.id]))
         self.assertEqual(response.status_code, 200)
   
     def test_uninstall_module_view(self):
         self.client.login(username='admin', password='adminpassword')
-        response = self.client.get(reverse('uninstall_module', args=[self.module.id]))
+        response = self.client.get(reverse('modules:uninstall_module', args=[self.module.id]))
         self.assertEqual(response.status_code, 302)
         
         
