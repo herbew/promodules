@@ -12,7 +12,7 @@ from modules.views import module_list, install_module, upgrade_module, uninstall
 class ModuleURLTestCase(TestCase):
     def test_module_list_url(self):
         url = reverse('modules:module_list')
-        self.assertEqual(url, '/module/')
+        self.assertEqual(url, '/module/list/')
         self.assertEqual(resolve(url).func, module_list)
 
     def test_install_module_url(self):

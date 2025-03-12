@@ -1,5 +1,7 @@
 from django.test import TestCase, Client, override_settings
 from django.urls import reverse
+from django.contrib.auth.models import User
+
 from modules.models import Module
 
 @override_settings(DATABASES={
@@ -12,6 +14,11 @@ from modules.models import Module
 class ModuleTemplatesTest(TestCase):
     def setUp(self):
         self.client = Client()
+        self.superuser = User.objects.create_superuser(
+            username='admin',
+            password='adminpassword',
+            email='admin@example.com'
+        )
         self.module = Module.objects.create(
             name='Test Module',
             version='1.0',
@@ -29,6 +36,7 @@ class ModuleTemplatesTest(TestCase):
         self.assertContains(response, 'installed')
 
     def test_install_module_template(self):
+        self.client.login(username='admin', password='adminpassword')
         response = self.client.get(reverse('modules:install_module'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'modules/install_module.html')
@@ -36,6 +44,7 @@ class ModuleTemplatesTest(TestCase):
         self.assertContains(response, 'Install Module')
 
     def test_upgrade_module_template(self):
+        self.client.login(username='admin', password='adminpassword')
         response = self.client.get(reverse('modules:upgrade_module', args=[self.module.id]))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'modules/upgrade_module.html')
@@ -43,6 +52,7 @@ class ModuleTemplatesTest(TestCase):
         self.assertContains(response, 'Upgrade Module')
 
     def test_uninstall_module_template(self):
+        self.client.login(username='admin', password='adminpassword')
         response = self.client.get(reverse('modules:uninstall_module', args=[self.module.id]))
         self.assertEqual(response.status_code, 302)
         #self.assertTemplateUsed(response, 'modules/module_list.html')

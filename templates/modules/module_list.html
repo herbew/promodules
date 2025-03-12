@@ -12,8 +12,8 @@
         {% for module in modules %}
             <li>
                 {{ module.name }} (v{{ module.version }}) - {{ module.status }}
-                <a href="{% url 'upgrade_module' module.id %}">Upgrade</a>
-                <a href="{% url 'uninstall_module' module.id %}">Uninstall</a>
+                <a href="{% url 'modules:upgrade_module' module.id %}">Upgrade</a>
+                <a href="{% url 'modules:uninstall_module' module.id %}">Uninstall</a>
             </li>
         {% endfor %}
     </ul>

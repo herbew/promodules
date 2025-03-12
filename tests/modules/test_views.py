@@ -83,7 +83,7 @@ class ModuleViewTestCase(TestCase):
             'description': 'This is a new test module'
         }
         self.client.login(username='admin', password='adminpassword')
-        response = self.client.post(reverse('install_module'), data)
+        response = self.client.post(reverse('modules:install_module'), data)
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('modules:module_list'))
         self.assertEqual(Module.objects.count(), 2)
@@ -98,7 +98,7 @@ class ModuleViewTestCase(TestCase):
         }
         self.client.login(username='admin', password='adminpassword')
         
-        response = self.client.post(reverse('upgrade_module', args=[self.module.id]), data)
+        response = self.client.post(reverse('modules:upgrade_module', args=[self.module.id]), data)
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('modules:module_list'))
         self.module.refresh_from_db()
