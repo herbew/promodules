@@ -1,0 +1,2 @@
+include promodules/templates/modules/*.html
+include modules/fixtures/*.json
