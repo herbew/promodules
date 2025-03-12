@@ -43,5 +43,10 @@ def upgrade_module(request, module_id):
 @user_passes_test(is_superuser)
 def uninstall_module(request, module_id):
     module = get_object_or_404(Module, id=module_id)
-    module.delete()
+    #module.delete()
+    module.status = 'Uninstalled'
+    module.save()
     return redirect('modules:module_list')
+    
+    
+    
