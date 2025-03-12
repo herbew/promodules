@@ -7,11 +7,11 @@ from .forms import AddModuleForm, UpdateModuleForm
 
 def synch_module():
     try:
-        for m in settings.INSTALLED_LOCAL:
+        for m in settings.INSTALLED_MODULE:
             module, created = Module.objects.get_or_create(name=m)
             module.save()
     except:
-        pass
+        raise
 
 # Function for check is super user
 def is_superuser(user):
