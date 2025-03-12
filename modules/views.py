@@ -1,7 +1,17 @@
+from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Module
 from .forms import AddModuleForm, UpdateModuleForm
+
+
+def synch_module():
+	try:
+		for m in settings.INSTALLED_LOCAL:
+	        module, created = Module.objects.get_or_create(name=m)
+	        module.save()
+	except:
+		pass
 
 # Function for check is super user
 def is_superuser(user):
@@ -9,6 +19,7 @@ def is_superuser(user):
 
 def module_list(request):
     modules = Module.objects.all()
+    synch_module()
     return render(request, 'modules/module_list.html', {'modules': modules})
 
 # Only superuser can access this view
@@ -44,7 +55,7 @@ def upgrade_module(request, module_id):
 def uninstall_module(request, module_id):
     module = get_object_or_404(Module, id=module_id)
     #module.delete()
-    module.status = 'Uninstalled'
+    module.status = 'uninstalled'
     module.save()
     return redirect('modules:module_list')
     
