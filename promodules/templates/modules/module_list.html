@@ -103,7 +103,7 @@
             <tbody>
                 {% for module in modules %}
                 <tr>
-                    <td>{ module.name }}</td>
+                    <td>{{ module.name }}</td>
                     <td>(v{{ module.version }})</td>
                     <td>{{ module.status }}</td>
                     <td class="actions">
@@ -118,8 +118,9 @@
                 {% endfor %}
             </tbody>
         </table>
+        <br>
+	    <a href="{% url 'products:product_list' %}">Go to Product List</a>
     </div>
-	<br>
-	<a href="{% url 'products:product_list' %}">Go to Product List</a>
+	
 </body>
 </html>
