@@ -4,18 +4,122 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Module List</title>
+	<!-- Add CSS or link to CSS file if needed -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f9fa;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .actions {
+            text-align: center;
+        }
+        .actions a {
+            margin: 0 5px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        .actions a:hover {
+            text-decoration: underline;
+        }
+        .add-button {
+            display: block;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .add-button a {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .add-button a:hover {
+            background-color: #218838;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .back-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>Module List</h1>
-    <a href="{% url 'modules:install_module' %}">Install New Module</a>
-    <ul>
-        {% for module in modules %}
-            <li>
-                {{ module.name }} (v{{ module.version }}) - {{ module.status }}
-                <a href="{% url 'modules:upgrade_module' module.id %}">Upgrade</a>
-                <a href="{% url 'modules:uninstall_module' module.id %}">Uninstall</a>
-            </li>
-        {% endfor %}
-    </ul>
+	<div class="container">
+        <h1>Module List</h1>
+        <div class="add-button">
+            <a href="{% url 'modules:install_module' %}">Install New Module</a>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Version</th>
+                    <th>Status</th>
+                    <th class="actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for module in modules %}
+                <tr>
+                    <td>{ module.name }}</td>
+                    <td>(v{{ module.version }})</td>
+                    <td>{{ module.status }}</td>
+                    <td class="actions">
+						<a href="{% url 'modules:upgrade_module' module.id %}">Upgrade</a>
+						<a href="{% url 'modules:uninstall_module' module.id %}">Uninstall</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align: center;">No Module found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+	<br>
+	<a href="{% url 'products:product_list' %}">Go to Product List</a>
 </body>
 </html>
