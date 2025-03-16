@@ -108,7 +108,7 @@
                     <td>{{ module.status }}</td>
                     <td class="actions">
 						<a href="{% url 'modules:upgrade_module' module.id %}">Upgrade</a>
-						<a href="{% url 'modules:uninstall_module' module.id %}">Uninstall</a>
+						<a href="#" onclick="confirmUninstall('{% url 'modules:uninstall_module' module.id %}');" >Uninstall</a>
                     </td>
                 </tr>
                 {% empty %}
@@ -120,6 +120,14 @@
         </table>
         <br>
 	    <a href="{% url 'products:product_list' %}">Go to Product List</a>
+		
+		<script>
+	        function confirmUninstall(uninstall_url) {
+	            if (confirm("Are you sure you want to uninstall this module?")) {
+	                window.location.href = uninstall_url;
+	            }
+	        }
+		</script>
     </div>
 	
 </body>
